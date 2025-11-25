@@ -76,11 +76,23 @@ class TMSSeeder extends Seeder
             'email' => 'admin@tms.local',
             'password' => Hash::make('password'),
         ]);
-        
-        // Assign admin role to user for all terminals
+
+        // Also create a second admin user for testing
+        $testUser = User::create([
+            'name' => 'Test Administrator',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password123'),
+        ]);
+
+        // Assign admin role to users for all terminals
         $terminals = Terminal::all();
         foreach ($terminals as $terminal) {
             $user->userTerminalAccesses()->create([
+                'terminal_id' => $terminal->id,
+                'role_id' => $adminRole->id,
+            ]);
+
+            $testUser->userTerminalAccesses()->create([
                 'terminal_id' => $terminal->id,
                 'role_id' => $adminRole->id,
             ]);

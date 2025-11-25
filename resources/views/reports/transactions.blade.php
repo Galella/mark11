@@ -86,7 +86,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
+                <table class="table table-bordered table-hover text-nowrap">
                     <thead>
                         <tr>
                             <th>Container</th>
@@ -102,7 +102,7 @@
                         <tr>
                             <td>{{ $transaction->container->number }}</td>
                             <td>
-                                <span class="badge 
+                                <span class="badge
                                     {{ $transaction->transaction_type == 'GATE_IN' ? 'bg-success' : 'bg-danger' }}">
                                     {{ $transaction->transaction_type }}
                                 </span>
@@ -132,7 +132,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
+                <table class="table table-bordered table-hover text-nowrap">
                     <thead>
                         <tr>
                             <th>Container</th>

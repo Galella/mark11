@@ -316,6 +316,14 @@
                 </a>
               </li>
 
+              <!-- User Management -->
+              <li class="nav-item">
+                <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-people"></i>
+                  <p>Users</p>
+                </a>
+              </li>
+
               <!-- Reports -->
               <li class="nav-header">REPORTS</li>
 

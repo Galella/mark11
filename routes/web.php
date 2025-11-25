@@ -11,6 +11,7 @@ use App\Http\Controllers\TrainController;
 use App\Http\Controllers\WagonController;
 use App\Http\Controllers\RailScheduleController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\UserController;
 
 // Public route for the welcome page
 Route::get('/', function () {
@@ -68,4 +69,7 @@ Route::middleware(['auth'])->group(function () {
     // Reports
     Route::get('/reports/inventory', [DashboardController::class, 'inventoryReport'])->name('reports.inventory');
     Route::get('/reports/transactions', [DashboardController::class, 'transactionReport'])->name('reports.transactions');
+
+    // User Management
+    Route::resource('users', UserController::class);
 });

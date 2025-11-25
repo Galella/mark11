@@ -10,6 +10,8 @@ class GateTransaction extends Model
 {
     use HasFactory;
 
+    protected $table = 'gate_transactions';
+
     protected $fillable = [
         'terminal_id',
         'container_id',

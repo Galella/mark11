@@ -33,15 +33,28 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="terminal_id">Terminal <span class="text-danger">*</span></label>
-                                <select class="form-control @error('terminal_id') is-invalid @enderror" 
-                                        id="terminal_id" name="terminal_id" required>
-                                    <option value="">Select Terminal</option>
-                                    @foreach($terminals as $terminal)
-                                        <option value="{{ $terminal->id }}" {{ old('terminal_id') == $terminal->id ? 'selected' : '' }}>
-                                            {{ $terminal->name }} ({{ $terminal->code }})
-                                        </option>
-                                    @endforeach
+                                <select class="form-control @error('terminal_id') is-invalid @enderror"
+                                        id="terminal_id" name="terminal_id"
+                                        {{ $accessibleTerminals->count() == 1 ? 'readonly' : 'required' }}>
+                                    @if($accessibleTerminals->count() > 1)
+                                        <option value="">Select Terminal</option>
+                                        @foreach($accessibleTerminals as $terminal)
+                                            <option value="{{ $terminal->id }}"
+                                                {{ old('terminal_id', $autoSelectTerminal?->id) == $terminal->id ? 'selected' : '' }}>
+                                                {{ $terminal->name }} ({{ $terminal->code }})
+                                            </option>
+                                        @endforeach
+                                    @else
+                                        @if($autoSelectTerminal)
+                                            <option value="{{ $autoSelectTerminal->id }}" selected>
+                                                {{ $autoSelectTerminal->name }} ({{ $autoSelectTerminal->code }})
+                                            </option>
+                                        @endif
+                                    @endif
                                 </select>
+                                @if($accessibleTerminals->count() == 1)
+                                    <input type="hidden" name="terminal_id" value="{{ $autoSelectTerminal->id }}">
+                                @endif
                                 @error('terminal_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -156,7 +169,7 @@
                         <select class="form-control @error('handover_terminal_id') is-invalid @enderror" 
                                 id="handover_terminal_id" name="handover_terminal_id">
                             <option value="">Select Destination Terminal</option>
-                            @foreach($terminals as $terminal)
+                            @foreach($allTerminals as $terminal)
                                 <option value="{{ $terminal->id }}" {{ old('handover_terminal_id') == $terminal->id ? 'selected' : '' }}>
                                     {{ $terminal->name }} ({{ $terminal->code }})
                                 </option>

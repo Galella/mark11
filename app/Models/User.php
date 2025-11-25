@@ -81,4 +81,14 @@ class User extends Authenticatable
                     ->where('terminal_id', $terminalId)
                     ->first();
     }
+
+    /**
+     * Get the role for a specific terminal using a different approach.
+     */
+    public function getUserTerminalAccess($terminalId)
+    {
+        return $this->userTerminalAccesses()
+                    ->where('terminal_id', $terminalId)
+                    ->first();
+    }
 }

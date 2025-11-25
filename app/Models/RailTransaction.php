@@ -10,6 +10,8 @@ class RailTransaction extends Model
 {
     use HasFactory;
 
+    protected $table = 'rail_transactions';
+
     protected $fillable = [
         'terminal_id',
         'container_id',

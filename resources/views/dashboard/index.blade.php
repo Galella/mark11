@@ -129,7 +129,7 @@
                 <h3 class="card-title">Recent Gate Transactions</h3>
             </div>
             <div class="card-body p-0">
-                <table class="table table-striped">
+                <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Container</th>
@@ -164,7 +164,7 @@
                 <h3 class="card-title">Recent Rail Transactions</h3>
             </div>
             <div class="card-body p-0">
-                <table class="table table-striped">
+                <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Container</th>

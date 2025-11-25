@@ -1,29 +1,74 @@
-@extends('layouts.main')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Login - Terminal Management System</title>
 
-@section('title', 'Login - Terminal Management System')
+    <!--begin::Accessibility Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+    <!--end::Accessibility Meta Tags-->
 
-@section('content-header')
-<div class="row">
-    <div class="col-sm-6">
-        <h1 class="m-0">Login</h1>
-    </div>
-    <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-end">
-            <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
-            <li class="breadcrumb-item active">Login</li>
-        </ol>
-    </div>
-</div>
-@endsection
+    <!--begin::Primary Meta Tags-->
+    <meta name="title" content="TMS | Login Page" />
+    <meta name="author" content="TMS Dev Team" />
+    <meta
+      name="description"
+      content="Terminal Management System - Login to manage your terminal operations"
+    />
+    <meta
+      name="keywords"
+      content="terminal management, logistics, container tracking, gate operations, rail operations, warehouse management"
+    />
+    <!--end::Primary Meta Tags-->
 
-@section('content')
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card card-outline card-primary">
-            <div class="card-header text-center">
-                <a href="{{ route('welcome') }}" class="h1"><b>TMS</b> Login</a>
-            </div>
-            <div class="card-body">
+    <!--begin::Accessibility Features-->
+    <!-- Skip links will be dynamically added by accessibility.js -->
+    <meta name="supported-color-schemes" content="light dark" />
+    <link rel="preload" href="{{ asset('adminlte/css/adminlte.css') }}" as="style" />
+    <!--end::Accessibility Features-->
+
+    <!--begin::Fonts-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+      integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
+      crossorigin="anonymous"
+      media="print"
+      onload="this.media='all'"
+    />
+    <!--end::Fonts-->
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(Bootstrap Icons)-->
+
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="{{ asset('adminlte/css/adminlte.css') }}" />
+    <!--end::Required Plugin(AdminLTE)-->
+</head>
+<body class="login-page bg-body-secondary">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="/"><b>TMS</b> Login</a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
 
                 @if(session('error'))
@@ -37,10 +82,8 @@
                     <div class="input-group mb-3">
                         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
                                placeholder="Email" value="{{ old('email') }}" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
+                        <div class="input-group-text">
+                            <span class="bi bi-envelope"></span>
                         </div>
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -51,10 +94,8 @@
                     <div class="input-group mb-3">
                         <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
                                placeholder="Password" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
+                        <div class="input-group-text">
+                            <span class="bi bi-lock-fill"></span>
                         </div>
                         @error('password')
                             <span class="invalid-feedback" role="alert">
@@ -62,41 +103,72 @@
                             </span>
                         @enderror
                     </div>
+                    <!--begin::Row-->
                     <div class="row">
                         <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label for="remember">
-                                    Remember Me
-                                </label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="remember" 
+                                       value="1" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="remember"> Remember Me </label>
                             </div>
                         </div>
                         <!-- /.col -->
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Sign In</button>
+                            </div>
                         </div>
                         <!-- /.col -->
                     </div>
+                    <!--end::Row-->
                 </form>
 
+                <!--
+                <div class="social-auth-links text-center mb-3 d-grid gap-2">
+                    <p>- OR -</p>
+                    <a href="#" class="btn btn-primary">
+                        <i class="bi bi-facebook me-2"></i> Sign in using Facebook
+                    </a>
+                    <a href="#" class="btn btn-danger">
+                        <i class="bi bi-google me-2"></i> Sign in using Google+
+                    </a>
+                </div>
+                -->
+
+                <!-- /.social-auth-links -->
+
+                <!--
+                <p class="mb-1">
+                    <a href="#">I forgot my password</a>
+                </p>
+                -->
+                
                 <p class="mb-0">
                     <a href="/" class="text-center">Back to Home</a>
                 </p>
             </div>
-            <!-- /.card-body -->
+            <!-- /.login-card-body -->
         </div>
-        <!-- /.card -->
     </div>
-</div>
-@endsection
+    <!-- /.login-box -->
 
-@section('styles')
-<style>
-.login-box-msg {
-    margin: 0;
-    padding: 0 20px 20px 20px;
-    text-align: center;
-    font-size: 14px;
-}
-</style>
-@endsection
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
+    <script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
+    <!--end::Required Plugin(AdminLTE)-->
+</body>
+</html>

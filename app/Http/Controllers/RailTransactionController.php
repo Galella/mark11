@@ -21,12 +21,26 @@ class RailTransactionController extends Controller
      */
     public function showRailInForm()
     {
-        $terminals = Terminal::all();
+        $user = Auth::user();
+        $userTerminalAccesses = $user->userTerminalAccesses()->with(['terminal', 'role'])->get();
+
+        // Get the terminals that the user has access to
+        $accessibleTerminals = collect();
+        foreach($userTerminalAccesses as $access) {
+            $accessibleTerminals->push($access->terminal);
+        }
+
+        // Check if user has access to only one terminal
+        $autoSelectTerminal = ($accessibleTerminals->count() == 1) ? $accessibleTerminals->first() : null;
+
         $trains = Train::where('is_active', true)->get();
         $schedules = RailSchedule::where('is_active', true)->get();
         $wagons = Wagon::where('is_active', true)->get();
-        
-        return view('rail.rail-in', compact('terminals', 'trains', 'schedules', 'wagons'));
+
+        // For handovers, we might need to show all terminals
+        $allTerminals = Terminal::all();
+
+        return view('rail.rail-in', compact('accessibleTerminals', 'autoSelectTerminal', 'trains', 'schedules', 'wagons', 'allTerminals'));
     }
 
     /**
@@ -34,8 +48,12 @@ class RailTransactionController extends Controller
      */
     public function processRailIn(Request $request)
     {
+        // Get user's accessible terminals
+        $user = Auth::user();
+        $accessibleTerminalIds = $user->userTerminalAccesses->pluck('terminal_id')->toArray();
+
         $validator = Validator::make($request->all(), [
-            'terminal_id' => 'required|exists:terminals,id',
+            'terminal_id' => 'required|in:' . implode(',', $accessibleTerminalIds), // Ensure user can only submit to their terminals
             'container_number' => ['required', 'string', 'size:11', new ISO6346ContainerNumber],
             'rail_schedule_id' => 'required|exists:rail_schedules,id',
             'wagon_id' => 'required|exists:wagons,id',
@@ -124,11 +142,23 @@ class RailTransactionController extends Controller
      */
     public function showRailOutForm()
     {
-        $terminals = Terminal::all();
+        $user = Auth::user();
+        $userTerminalAccesses = $user->userTerminalAccesses()->with(['terminal', 'role'])->get();
+
+        // Get the terminals that the user has access to
+        $accessibleTerminals = collect();
+        foreach($userTerminalAccesses as $access) {
+            $accessibleTerminals->push($access->terminal);
+        }
+
+        // Check if user has access to only one terminal
+        $autoSelectTerminal = ($accessibleTerminals->count() == 1) ? $accessibleTerminals->first() : null;
+
         $trains = Train::where('is_active', true)->get();
         $schedules = RailSchedule::where('is_active', true)->get();
-        
-        return view('rail.rail-out', compact('terminals', 'trains', 'schedules'));
+        $allTerminals = Terminal::all();
+
+        return view('rail.rail-out', compact('accessibleTerminals', 'autoSelectTerminal', 'trains', 'schedules', 'allTerminals'));
     }
 
     /**
@@ -136,8 +166,12 @@ class RailTransactionController extends Controller
      */
     public function processRailOut(Request $request)
     {
+        // Get user's accessible terminals
+        $user = Auth::user();
+        $accessibleTerminalIds = $user->userTerminalAccesses->pluck('terminal_id')->toArray();
+
         $validator = Validator::make($request->all(), [
-            'terminal_id' => 'required|exists:terminals,id',
+            'terminal_id' => 'required|in:' . implode(',', $accessibleTerminalIds), // Ensure user can only submit to their terminals
             'container_number' => ['required', 'string', 'size:11', new ISO6346ContainerNumber],
             'rail_schedule_id' => 'required|exists:rail_schedules,id',
             'wagon_position' => 'required|string|max:10',

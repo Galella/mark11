@@ -16,6 +16,8 @@ class UserTerminalAccess extends Model
         'role_id',
     ];
 
+    protected $table = 'user_terminal_accesses';
+
     // Relationships
     public function user(): BelongsTo
     {
