@@ -105,6 +105,7 @@
             @yield('navbar-end')
             
             <!--begin::User Menu Dropdown-->
+            @auth
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
@@ -112,7 +113,7 @@
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">@yield('user-name', 'Guest')</span>
+                <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -123,8 +124,8 @@
                     alt="User Image"
                   />
                   <p>
-                    @yield('user-name', 'Guest') - @yield('user-role', 'Web Developer')
-                    <small>Member since @yield('member-since', 'Nov. 2023')</small>
+                    {{ Auth::user()->name }} - System User
+                    <small>Member since {{ Auth::user()->created_at->format('M. Y') }}</small>
                   </p>
                 </li>
                 <!--end::User Image-->
@@ -133,13 +134,13 @@
                   <!--begin::Row-->
                   <div class="row">
                     <div class="col-4 text-center">
-                      <a href="#">Followers</a>
+                      <a href="{{ route('dashboard') }}">Dashboard</a>
                     </div>
                     <div class="col-4 text-center">
-                      <a href="#">Sales</a>
+                      <a href="{{ route('containers.index') }}">Containers</a>
                     </div>
                     <div class="col-4 text-center">
-                      <a href="#">Friends</a>
+                      <a href="{{ route('inventory.index') }}">Inventory</a>
                     </div>
                   </div>
                   <!--end::Row-->
@@ -147,12 +148,27 @@
                 <!--end::Menu Body-->
                 <!--begin::Menu Footer-->
                 <li class="user-footer">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                  <a href="{{ route('dashboard') }}" class="btn btn-default btn-flat">Profile</a>
+                  <a href="{{ route('logout') }}" class="btn btn-default btn-flat float-end"
+                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                     Sign out
+                  </a>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                      @csrf
+                  </form>
                 </li>
                 <!--end::Menu Footer-->
               </ul>
             </li>
+            @endauth
+            @guest
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('login') }}">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Login</span>
+              </a>
+            </li>
+            @endguest
             <!--end::User Menu Dropdown-->
           </ul>
           <!--end::End Navbar Links-->
@@ -165,7 +181,7 @@
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="{{ route('home') }}" class="brand-link">
+          <a href="{{ route('dashboard') }}" class="brand-link">
             <!--begin::Brand Image-->
             <img
               src="{{ asset('adminlte/assets/img/AdminLTELogo.png') }}"

@@ -45,7 +45,21 @@ class ActiveInventory extends Model
         if ($this->out_time) {
             return $this->in_time->diffInHours($this->out_time);
         }
-        
+
         return $this->in_time->diffInHours(now());
+    }
+
+    // Accessor to get dwell time as formatted string
+    public function getDwellTimeFormattedAttribute()
+    {
+        $hours = $this->getDwellTimeAttribute();
+        $days = floor($hours / 24);
+        $remainingHours = $hours % 24;
+
+        if ($days > 0) {
+            return $days . ' days ' . $remainingHours . ' hours';
+        }
+
+        return $hours . ' hours';
     }
 }

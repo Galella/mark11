@@ -27,7 +27,45 @@ class ActiveInventoryController extends Controller
         // Get all terminals for the filter dropdown
         $terminals = Terminal::all();
 
-        return view('inventory.index', compact('inventories', 'terminals'));
+        // Get summary statistics
+        $totalActiveContainers = $request->terminal_id
+            ? ActiveInventory::where('terminal_id', $request->terminal_id)->count()
+            : ActiveInventory::count();
+
+        $importContainers = $request->terminal_id
+            ? ActiveInventory::where('terminal_id', $request->terminal_id)
+                             ->whereHas('container', function($q) {
+                                 $q->where('category', 'import');
+                             })->count()
+            : ActiveInventory::whereHas('container', function($q) {
+                $q->where('category', 'import');
+            })->count();
+
+        $exportContainers = $request->terminal_id
+            ? ActiveInventory::where('terminal_id', $request->terminal_id)
+                             ->whereHas('container', function($q) {
+                                 $q->where('category', 'export');
+                             })->count()
+            : ActiveInventory::whereHas('container', function($q) {
+                $q->where('category', 'export');
+            })->count();
+
+        // Count containers with high dwell time (more than 24 hours)
+        $highDwellContainers = $request->terminal_id
+            ? ActiveInventory::where('terminal_id', $request->terminal_id)
+                             ->whereRaw('strftime("%s", "now") - strftime("%s", in_time) > 86400') // More than 24 hours (86400 seconds)
+                             ->count()
+            : ActiveInventory::whereRaw('strftime("%s", "now") - strftime("%s", in_time) > 86400') // More than 24 hours (86400 seconds)
+                             ->count();
+
+        return view('inventory.index', compact(
+            'inventories',
+            'terminals',
+            'totalActiveContainers',
+            'importContainers',
+            'exportContainers',
+            'highDwellContainers'
+        ));
     }
 
     /**

@@ -10,53 +10,62 @@ use App\Http\Controllers\RailTransactionController;
 use App\Http\Controllers\TrainController;
 use App\Http\Controllers\WagonController;
 use App\Http\Controllers\RailScheduleController;
+use App\Http\Controllers\Auth\LoginController;
 
 // Public route for the welcome page
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Authentication routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Terminal Management
-Route::resource('terminals', TerminalController::class);
+// Protected routes - need authentication
+Route::middleware(['auth'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Container Management
-Route::resource('containers', ContainerController::class);
-Route::post('/containers/search', [ContainerController::class, 'search'])->name('containers.search');
-Route::get('/containers/{number}/get', [ContainerController::class, 'getByNumber'])->name('containers.getByNumber');
+    // Terminal Management
+    Route::resource('terminals', TerminalController::class);
 
-// Inventory Management
-Route::get('/inventory', [ActiveInventoryController::class, 'index'])->name('inventory.index');
-Route::get('/inventory/{inventory}', [ActiveInventoryController::class, 'show'])->name('inventory.show');
-Route::get('/inventory/high-dwell-time', [ActiveInventoryController::class, 'highDwellTime'])->name('inventory.high-dwell-time');
-Route::get('/inventory/api/count-by-terminal', [ActiveInventoryController::class, 'getInventoryCountByTerminal'])->name('inventory.api.count-by-terminal');
-Route::get('/inventory/api/statistics', [ActiveInventoryController::class, 'getStatistics'])->name('inventory.api.statistics');
+    // Container Management
+    Route::resource('containers', ContainerController::class);
+    Route::post('/containers/search', [ContainerController::class, 'search'])->name('containers.search');
+    Route::get('/containers/{number}/get', [ContainerController::class, 'getByNumber'])->name('containers.getByNumber');
 
-// Gate Operations
-Route::get('/gate/in', [GateTransactionController::class, 'showGateInForm'])->name('gate.in.form');
-Route::post('/gate/in', [GateTransactionController::class, 'processGateIn'])->name('gate.process-in');
-Route::get('/gate/out', [GateTransactionController::class, 'showGateOutForm'])->name('gate.out.form');
-Route::post('/gate/out', [GateTransactionController::class, 'processGateOut'])->name('gate.process-out');
-Route::get('/gate/transactions', [GateTransactionController::class, 'getGateTransactions'])->name('gate.transactions');
+    // Inventory Management
+    Route::get('/inventory', [ActiveInventoryController::class, 'index'])->name('inventory.index');
+    Route::get('/inventory/{inventory}', [ActiveInventoryController::class, 'show'])->name('inventory.show');
+    Route::get('/inventory/high-dwell-time', [ActiveInventoryController::class, 'highDwellTime'])->name('inventory.high-dwell-time');
+    Route::get('/inventory/api/count-by-terminal', [ActiveInventoryController::class, 'getInventoryCountByTerminal'])->name('inventory.api.count-by-terminal');
+    Route::get('/inventory/api/statistics', [ActiveInventoryController::class, 'getStatistics'])->name('inventory.api.statistics');
 
-// Rail Operations
-Route::get('/rail/in', [RailTransactionController::class, 'showRailInForm'])->name('rail.in.form');
-Route::post('/rail/in', [RailTransactionController::class, 'processRailIn'])->name('rail.process-in');
-Route::get('/rail/out', [RailTransactionController::class, 'showRailOutForm'])->name('rail.out.form');
-Route::post('/rail/out', [RailTransactionController::class, 'processRailOut'])->name('rail.process-out');
-Route::get('/rail/transactions', [RailTransactionController::class, 'getRailTransactions'])->name('rail.transactions');
+    // Gate Operations
+    Route::get('/gate/in', [GateTransactionController::class, 'showGateInForm'])->name('gate.in.form');
+    Route::post('/gate/in', [GateTransactionController::class, 'processGateIn'])->name('gate.process-in');
+    Route::get('/gate/out', [GateTransactionController::class, 'showGateOutForm'])->name('gate.out.form');
+    Route::post('/gate/out', [GateTransactionController::class, 'processGateOut'])->name('gate.process-out');
+    Route::get('/gate/transactions', [GateTransactionController::class, 'getGateTransactions'])->name('gate.transactions');
 
-// Train Management
-Route::resource('trains', TrainController::class);
+    // Rail Operations
+    Route::get('/rail/in', [RailTransactionController::class, 'showRailInForm'])->name('rail.in.form');
+    Route::post('/rail/in', [RailTransactionController::class, 'processRailIn'])->name('rail.process-in');
+    Route::get('/rail/out', [RailTransactionController::class, 'showRailOutForm'])->name('rail.out.form');
+    Route::post('/rail/out', [RailTransactionController::class, 'processRailOut'])->name('rail.process-out');
+    Route::get('/rail/transactions', [RailTransactionController::class, 'getRailTransactions'])->name('rail.transactions');
 
-// Wagon Management
-Route::resource('wagons', WagonController::class);
+    // Train Management
+    Route::resource('trains', TrainController::class);
 
-// Rail Schedule Management
-Route::resource('rail-schedules', RailScheduleController::class);
+    // Wagon Management
+    Route::resource('wagons', WagonController::class);
 
-// Reports
-Route::get('/reports/inventory', [DashboardController::class, 'inventoryReport'])->name('reports.inventory');
-Route::get('/reports/transactions', [DashboardController::class, 'transactionReport'])->name('reports.transactions');
+    // Rail Schedule Management
+    Route::resource('rail-schedules', RailScheduleController::class);
+
+    // Reports
+    Route::get('/reports/inventory', [DashboardController::class, 'inventoryReport'])->name('reports.inventory');
+    Route::get('/reports/transactions', [DashboardController::class, 'transactionReport'])->name('reports.transactions');
+});

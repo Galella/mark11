@@ -51,7 +51,7 @@ class User extends Authenticatable
      */
     public function terminals()
     {
-        return $this->belongsToMany(Terminal::class, 'user_terminal_access')
+        return $this->belongsToMany(\App\Models\Terminal::class, 'user_terminal_accesses')
                     ->withPivot('role_id')
                     ->withTimestamps();
     }
@@ -61,7 +61,7 @@ class User extends Authenticatable
      */
     public function userTerminalAccesses()
     {
-        return $this->hasMany(UserTerminalAccess::class);
+        return $this->hasMany(\App\Models\UserTerminalAccess::class);
     }
 
     /**

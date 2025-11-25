@@ -209,7 +209,8 @@ class DashboardController extends Controller
 
         $inventory = $query->get();
 
-        return view('reports.inventory', compact('inventory'));
+        $terminals = \App\Models\Terminal::all();
+        return view('reports.inventory', compact('inventory', 'terminals'));
     }
 
     /**
@@ -279,6 +280,7 @@ class DashboardController extends Controller
             $railTransactions = $railQuery->get();
         }
 
-        return view('reports.transactions', compact('gateTransactions', 'railTransactions'));
+        $terminals = \App\Models\Terminal::all();
+        return view('reports.transactions', compact('gateTransactions', 'railTransactions', 'terminals'));
     }
 }
