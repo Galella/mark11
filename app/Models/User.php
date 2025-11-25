@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    /**
+     * Get the terminals this user has access to.
+     */
+    public function terminals()
+    {
+        return $this->belongsToMany(Terminal::class, 'user_terminal_access')
+                    ->withPivot('role_id')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get the user's terminal access records.
+     */
+    public function userTerminalAccesses()
+    {
+        return $this->hasMany(UserTerminalAccess::class);
+    }
+
+    /**
+     * Check if user has access to a specific terminal.
+     */
+    public function hasTerminalAccess($terminalId)
+    {
+        return $this->terminals()->where('terminal_id', $terminalId)->exists();
+    }
+
+    /**
+     * Get the role for a specific terminal.
+     */
+    public function getRoleForTerminal($terminalId)
+    {
+        return $this->userTerminalAccesses()
+                    ->where('terminal_id', $terminalId)
+                    ->first();
+    }
+}
